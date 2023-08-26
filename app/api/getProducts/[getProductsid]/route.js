@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import { NextResponse } from "next/server";
-import { connectionStr } from "app/libs/mongodb"; // Fix the variable name here
-import { getProduct } from "app/libs/models/getProduct"
+import { connectionStr } from "app/libs/mongodb"; 
+import { getProduct } from "app/libs/models/Schema"
 
 export async function GET(request, content){
     const getProductID = content.params.getProductsid;

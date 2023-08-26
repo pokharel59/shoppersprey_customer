@@ -1,5 +1,8 @@
 import './globals.css'
-import { Inter } from 'next/font/google'
+import { Inter } from 'next/font/google';
+import Authprovider from './components/Authprovider/providers';
+import Header from './components/header';
+import Footer from './components/footer';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -11,9 +14,11 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className="flex">
-        <main>{children}</main>
+      <body className={inter.className}>
+        <Header/>
+        <Authprovider>{children}</Authprovider>
+        <Footer/>
       </body>
-    </html>
+    </html> 
   );
 }
