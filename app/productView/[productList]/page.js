@@ -7,12 +7,15 @@ const ProductPage = (props) => {
     const router = useRouter();
 
     const [reviews, setReviews] = useState([]);
+    const [quantity, setQuantity] = useState(1);
 
     const [name, setName] = useState("");
     const [price, setPrice] = useState("");
     const [description, setDescription] = useState("");
     const [category, setCategory] = useState("");
     const [title, setTitle] = useState("");
+    const [paid] = useState("No");
+    const [orderStatus] = useState("pending");
 
     const [isLoading, setIsLoading] = useState(true);
 
@@ -44,6 +47,16 @@ const ProductPage = (props) => {
         }
     };
 
+    const handleDecreaseQuantity = () => {
+        if(quantity > 0){
+            setQuantity(quantity - 1);
+        }
+    };
+
+    const handleIncreaseQuantity = () => {
+        setQuantity(quantity + 1);
+    };
+
     const handleOrder = async () => {
 
         if (!session) {
@@ -54,9 +67,12 @@ const ProductPage = (props) => {
 
         try {
             const orderData = {
-                recipient: `${session.user.name}, ${session.user.email}`,
-                products: `${name}, ${price}, ${description}`,
-                paid: false,
+                recipient: `${session.user.name}, ${session.user.email}, ${session.user.nummber}`,
+                products: `${name}`,
+                price: ` ${price}`,
+                quantity: `${quantity}`,
+                paid: `${paid}`,
+                orderStatus: `${orderStatus}`, 
             };
 
             const response = await fetch("http://localhost:4000/api/postOrders/", {
@@ -124,9 +140,24 @@ const ProductPage = (props) => {
                     <p className="text-lg mb-4">Price: {price}</p>
                     <p className="text-gray-600 mb-6">{description}</p>
                     <p className="text-gray-600 mb-6">{category}</p>
+                    <div className="flex border border-gray-300 rounded mb-4">
+                        <button
+                            className="px-2 py-1"
+                            onClick={handleDecreaseQuantity}
+                        >
+                            -
+                        </button>
+                        <div className="px-3">{quantity}</div>
+                        <button
+                            className="px-2 py-1"
+                            onClick={handleIncreaseQuantity}
+                        >
+                            +
+                        </button>
+                    </div>
                     <button
                         type='button'
-                        onClick={handleOrder}
+                        // onClick={handleOrder}
                         className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md"
                     >
                         Place Order

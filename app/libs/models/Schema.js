@@ -13,9 +13,12 @@ const orderModel = new mongoose.Schema({
     type: Date,
     default: Date.now
   },
-  paid: { type: Boolean, default: false },
+  paid: { type: String, required: true },
   recipient: { type: String, required: true },
   products: { type: String, required: true },
+  price: {type: String, required: true},
+  quantity: { type: Number, reuired: true},
+  orderStatus: { type: String, required: true }
 });
 
 export const Order = mongoose.models.orders || mongoose.model("orders", orderModel);
