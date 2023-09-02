@@ -59,37 +59,38 @@ const ProductPage = (props) => {
 
     const handleOrder = async () => {
 
-        if (!session) {
-            alert('Please log in to place an order. ');
-            router.push('/loginPage')
-            return;
-        }
+        // if (!session) {
+        //     alert('Please log in to place an order. ');
+        //     router.push('/loginPage')
+        //     return;
+        // }
 
         try {
-            const orderData = {
-                recipient: `${session.user.name}, ${session.user.email}, ${session.user.nummber}`,
-                products: `${name}`,
-                price: ` ${price}`,
-                quantity: `${quantity}`,
-                paid: `${paid}`,
-                orderStatus: `${orderStatus}`, 
-            };
-
-            const response = await fetch("http://localhost:4000/api/postOrders/", {
+            console.log(name, price, quantity, paid, orderStatus);
+            
+            const requestOptions = {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(orderData)
-            });
+                body: JSON.stringify({
+                // recipient: `${session.user.name}, ${session.user.email}, ${session.user.nummber}`,
+                name: name,
+                price: price,
+                quantity: parseInt(quantity),
+                paid: paid,
+                orderStatus: orderStatus, 
+            }),
+        };
+            const response = await fetch("http://localhost:4000/api/postOrders/", requestOptions);
+            console.log('API Response: ', response);
 
             const data = await response.json();
-
             if (data.success) {
                 alert("Order placed successfully")
                 console.log('Order placed successfully:', data.result);
             } else {
-                alert("Faled to place order")
+                alert("Failed to place order")
                 console.log('Failed to place order:', data);
             }
         } catch (error) {
@@ -157,7 +158,7 @@ const ProductPage = (props) => {
                     </div>
                     <button
                         type='button'
-                        // onClick={handleOrder}
+                        onClick={handleOrder}
                         className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md"
                     >
                         Place Order
