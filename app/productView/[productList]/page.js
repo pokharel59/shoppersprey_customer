@@ -58,23 +58,25 @@ const ProductPage = (props) => {
     };
 
     const handleOrder = async () => {
+        let recipient = "";
 
-        // if (!session) {
-        //     alert('Please log in to place an order. ');
-        //     router.push('/loginPage')
-        //     return;
-        // }
-
+        if (session === "unautenticated") {
+            alert('Please log in to place an order. ');
+            router.push('/loginPage')
+            return;
+        }else{
+            recipient = `${session.user.name}, ${session.user.email}`;
+        }
         try {
-            console.log(name, price, quantity, paid, orderStatus);
-            
+            console.log(recipient, name, price, quantity, paid, orderStatus);
+
             const requestOptions = {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                // recipient: `${session.user.name}, ${session.user.email}, ${session.user.nummber}`,
+                recipient: recipient,
                 name: name,
                 price: price,
                 quantity: parseInt(quantity),

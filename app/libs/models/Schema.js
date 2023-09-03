@@ -14,7 +14,7 @@ const orderModel = new mongoose.Schema({
     default: Date.now
   },
   paid: { type: String, required: true },
-  // recipient: { type: String, required: true }
+  recipient: { type: String, required: true },
   name: { type: String, required: true },
   price: {type: String, required: true},
   quantity: { type: Number, reqired: true},
