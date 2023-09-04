@@ -19,7 +19,7 @@ const ProductPage = (props) => {
 
     const [isLoading, setIsLoading] = useState(true);
 
-    const { data: session, status } = useSession();
+    const { data: session} = useSession();
 
     useEffect(() => {
         getProductDetail();
@@ -58,14 +58,15 @@ const ProductPage = (props) => {
     };
 
     const handleOrder = async () => {
+
         let recipient = "";
 
-        if (session === "unautenticated") {
+        if (!session || !session.user) {
             alert('Please log in to place an order. ');
             router.push('/loginPage')
             return;
         }else{
-            recipient = `${session.user.name}, ${session.user.email}`;
+            recipient = `${session.user.name} ${session.user.email}`;
         }
         try {
             console.log(recipient, name, price, quantity, paid, orderStatus);

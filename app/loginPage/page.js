@@ -1,14 +1,27 @@
 "use client"
-import { signIn, signOut, useSession } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import HeaderPage from '../components/header';
 
 export default function LoginPage() {
   const router = useRouter();
   const { data: session } = useSession();
 
+  const[userName, setUserName] = useState("");
+  const [userImage, setUserImage] = useState("");
+
   const handleLogin = async () => {
     await signIn('google');
   };
+
+  useEffect(() => {
+    if(session){
+      setUserName(session.user.name);
+      setUserImage(session.user.image);
+      router.push('/productDisplay');
+    }
+  }, [session, router]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -20,7 +33,7 @@ export default function LoginPage() {
           </h2>
         </div>
         {session ? (
-          router.push("/productDisplay")
+          <HeaderPage userName={userName} userImage={userImage}/>
         ) : (
           <div>
             <p className="mt-4 text-center">Please sign in to continue</p>
