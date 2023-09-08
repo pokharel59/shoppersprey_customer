@@ -31,17 +31,15 @@ const featureSchema = new mongoose.Schema({
 export const featuresDetail = mongoose.models.features || mongoose.model("features", featureSchema);
 
 const userSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-  },
-  email: {
-    type: String,
-    required: true,
-  }
+  name: String,
+  email: String,
+  password: String,
+  address: String,
+  city: String,
+  phoneNumber: {type: Number, required: true}
 },
-{ timestamps: true}
 );
-const Users = mongoose.models.users || mongoose.model("users", userSchema);
-export default Users;
+
+export const Users = mongoose.models.users || mongoose.model("users", userSchema);
+
 
