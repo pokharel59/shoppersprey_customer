@@ -2,6 +2,8 @@
 import React, { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import { toast} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const ProductPage = (props) => {
     const router = useRouter();
@@ -62,7 +64,10 @@ const ProductPage = (props) => {
         let recipient = "";
 
         if (!session || !session.user) {
-            alert('Please log in to place an order. ');
+            toast.error('Please log in to place an order. ', {
+                position: toast.POSITION.TOP_RIGHT,
+                autoClose: 3000,
+            });
             router.push('/loginPage')
             return;
         }else{
@@ -90,7 +95,10 @@ const ProductPage = (props) => {
 
             const data = await response.json();
             if (data.success) {
-                alert("Order placed successfully")
+                toast.success("Order placed successfully", {
+                    position: toast.POSITION.TOP_LEFT,
+                    autoClose: 3000,
+                })
                 console.log('Order placed successfully:', data.result);
             } else {
                 alert("Failed to place order")

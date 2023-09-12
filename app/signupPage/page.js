@@ -1,7 +1,8 @@
 "use client"
-import { use, useState } from 'react';
+import {useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { stringify } from 'postcss';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function SignupPage() {
   const router = useRouter();
@@ -51,7 +52,10 @@ export default function SignupPage() {
         const emailCheckResponse = await fetch(`http://localhost:4000/api/addUsers?email=${encodeURIComponent(email)}`);
 
         if (emailCheckResponse.status === 409) {
-          alert("User with this email already exists.");
+          toast.error("User with this email already exists.", {
+            position: toast.POSITION.TOP_LEFT,
+            autoClose: 3000,
+          });
           return;
         }
 
@@ -74,7 +78,10 @@ export default function SignupPage() {
 
         const result = await response.json();
         if (result.success) {
-          alert("Account created");
+          toast.success("Account created", {
+            position: toast.POSITION.TOP_LEFT,
+            autoClose: 3000,
+          });
           setName('');
           setEmail('');
           setAddress('');

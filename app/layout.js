@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google';
 import Authprovider from './components/Authprovider/providers';
 import Header from './components/header';
 import Footer from './components/footer';
+import {ToastContainer } from 'react-toastify';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -16,6 +17,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className="h-screen">
         <Header/>
+        <ToastContainer/>
         <Authprovider>{children}</Authprovider>
         <Footer/>
       </body>
