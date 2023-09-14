@@ -1,5 +1,5 @@
 "use client"
-import {useState } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -49,16 +49,6 @@ export default function SignupPage() {
       try {
         console.log(name, email, password, address, city, phoneNumber);
 
-        const emailCheckResponse = await fetch(`http://localhost:4000/api/addUsers?email=${encodeURIComponent(email)}`);
-
-        if (emailCheckResponse.status === 409) {
-          toast.error("User with this email already exists.", {
-            position: toast.POSITION.TOP_LEFT,
-            autoClose: 3000,
-          });
-          return;
-        }
-
         const response = await fetch("http://localhost:4000/api/addUsers", {
           method: "POST",
           headers: {
@@ -76,26 +66,35 @@ export default function SignupPage() {
 
         console.log('API Response:', response);
 
-        const result = await response.json();
-        if (result.success) {
-          toast.success("Account created", {
-            position: toast.POSITION.TOP_LEFT,
-            autoClose: 3000,
-          });
-          setName('');
-          setEmail('');
-          setAddress('');
-          setPassword('');
-          setPhoneNumber('');
-          setCity('');
-          router.push("/loginPage")
+        // Check if the response status is OK (200) before parsing it as JSON
+        if (response.status === 200) {
+          const result = await response.json();
+          if (result.success) {
+            toast.success("Account created", {
+              position: toast.POSITION.TOP_LEFT,
+              autoClose: 3000,
+            });
+            setName('');
+            setEmail('');
+            setAddress('');
+            setPassword('');
+            setPhoneNumber('');
+            setCity('');
+            router.push("/loginPage");
+          } else {
+            console.log("Failed to create account: " + result.message);
+          }
+        } else if (response.status === 400) {
+          const result = await response.json();
+          setEmailError(result.message);
         } else {
-          console.log("Failed to create account: " + result.message);
+          // Handle other status codes
+          console.log("Failed to create account. Status code: " + response.status);
         }
-      }
-      catch (error) {
+      } catch (error) {
         console.error('Error adding user:', error);
       }
+
     }
   };
 

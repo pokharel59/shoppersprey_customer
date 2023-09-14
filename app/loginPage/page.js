@@ -1,6 +1,8 @@
 "use client"
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function SignUpPage() {
   const router = useRouter();
@@ -8,28 +10,52 @@ export default function SignUpPage() {
   const [email, setEmail] = useState(""); 
   const [password, setPassword] = useState(""); 
 
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+
   const handleSignUp = async () => {
-    if(email === "" || email == ""){
+    setEmailError("");
+    setPasswordError("");
+
+    let isValid = true;
+
+    if(email === "" || password == ""){
       alert("Field must not be empty");
-    }else{
-      const response = await fetch("http://localhost:4000/api/checkUser", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          email: email,
-          password: password
+      isValid = false;
+    }
+    
+    if(isValid){
+      try {
+        const response = await fetch("http://localhost:4000/api/checkUsers", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            email: email,
+            password: password
+          })
         })
-      })
+  
+        console.log('API Response:', response);
 
-      console.log('API Response:', response);
+        if(response.status === 200){
+          const result = await response.json();
+          if(result.success){
+            router.push("/")
+          }else{
+            console.log("Failed to found user");
+          }
+        }else if (response.status === 401){
+          toast.error("User not found in the database or invalid credentials", {
+            position: toast.POSITION.TOP_LEFT,
+            autoClose: 3000,
+          })
+          }
 
-      const result = response.json();
-      if(result.success){
-        setName('');
-        setEmail('');
-        router.push("/")
+
+      } catch (error) {
+        console.error('Error finding user:', error);
       }
     }
   };
@@ -59,6 +85,7 @@ export default function SignUpPage() {
               required
               className="w-full border rounded-md py-2 px-3 mt-1"
             />
+            <p className="text-red-500">{emailError}</p>
           </div>
           <div className="mt-4">
             <label htmlFor="newPassword" className="block font-bold">
@@ -72,6 +99,7 @@ export default function SignUpPage() {
               required
               className="w-full border rounded-md py-2 px-3 mt-1"
             />
+            <p className="text-red-500">{passwordError}</p>
           </div>
           <div className="mt-6">
             <button

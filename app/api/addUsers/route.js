@@ -1,34 +1,38 @@
-import mongoose, { connect } from "mongoose";
+import mongoose, { mongo } from "mongoose";
 import { NextResponse } from "next/server";
 import { connectionStr } from "app/libs/mongodb";
-import { Users } from "@/app/libs/models/Schema";
+import  {Users}  from "@/app/libs/models/Schema";
 import bcrypt from "bcrypt";
-import { useRouter } from "next/navigation";
+
 
 export async function GET(request) {
-  const { email } = request.query;
+  let data = []
 
   try {
-    const user = await Users.findOne({ email });
-
-    if (user) {
-      return NextResponse.text("User already exists", { status: 409 }); // 409 Conflict
-    }
-
-    return NextResponse.text("Email available");
+    await mongoose.connect(connectionStr);
+    const data = await Users.find();
   } catch (error) {
-    console.error("Error checking email:", error);
-    return NextResponse.json({ success: false }, { status: 500 });
+    data = { success: false }
   }
+
+  return NextResponse.json({ result: user, success: true });
 }
 
 export async function POST(request) {
   const payload = await request.json();
+
   try {
     await mongoose.connect(connectionStr);
 
+    // Check if a user with the provided email already exists
+    const existingUser = await Users.findOne({ email: payload.email});
+
+    if (existingUser) {
+      return NextResponse.json({ message: 'User already exists', success: false }, { status: 400 });
+    }
+
     const hashedPassword = await bcrypt.hash(payload.password, 10);
-    let userData = new Users({
+    const userData = new Users({
       name: payload.name,
       email: payload.email,
       password: hashedPassword,
@@ -43,9 +47,10 @@ export async function POST(request) {
     return NextResponse.json({ result, success: true });
   } catch (error) {
     console.error('Error saving user:', error);
-    return NextResponse.json({ success: false }, { status: 500 });
+    return NextResponse.json({ message: 'Internal server error', success: false }, { status: 500 });
   }
 }
+
 
 
 
