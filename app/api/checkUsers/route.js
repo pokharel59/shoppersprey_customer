@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import { NextResponse } from "next/server";
 import { connectionStr } from "app/libs/mongodb";
 import { Users } from "@/app/libs/models/Schema";
+import jwt from "jsonwebtoken";
 
 export async function POST(request) {
   const payload = await request.json();
@@ -21,7 +22,14 @@ export async function POST(request) {
     const passwordMatch = await bcrypt.compare(payload.password, existingUser.password);
 
     if (passwordMatch) {
-      return NextResponse.json({ success: true }, { status: 200 });
+
+      const token = jwt.sign(
+        { name: existingUser.name, email: existingUser.email},
+        process.env.TOKEN_KEY,
+        { expiresIn: "1h"}
+        );
+
+      return NextResponse.json({ token, success: true}, { status: 200 });
     } else {
       return NextResponse.json({ message: 'Invalid password', success: false }, { status: 401 });
     }

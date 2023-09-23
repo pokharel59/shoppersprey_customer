@@ -36,7 +36,8 @@ const userSchema = new mongoose.Schema({
   password: String,
   address: String,
   city: String,
-  phoneNumber: {type: Number, required: true}
+  phoneNumber: {type: Number, required: true},
+  rememberMe: Boolean,
 },
 );
 
