@@ -45,7 +45,7 @@ export default function SignUpPage() {
           const { token } = result;
           localStorage.setItem('token', token);
           console.log('Token stored:', token);
-          // router.push("/");
+          router.push("/");
 
         } else if (response.status === 401) {
           toast.error("User not found in the database or invalid credentials", {
