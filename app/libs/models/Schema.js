@@ -43,4 +43,19 @@ const userSchema = new mongoose.Schema({
 
 export const Users = mongoose.models.users || mongoose.model("users", userSchema);
 
+const cartSchema = new mongoose.Schema({
+  user_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'users',
+    reqired: true
+  },
+  product_ids: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'products',
+    reqired: true
+  }]
+});
+
+export const Cart = mongoose.models.carts || mongoose.model("carts", cartSchema);
+
 

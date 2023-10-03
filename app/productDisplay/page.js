@@ -58,7 +58,7 @@ const ProductsDisplay = () => {
                                 <div key={item._id} className="bg-white p-4 shadow-md transition-transform transform hover:scale-105 hover:shadow-lg rounded-lg" style={{ width: '220px', height: '290px' }}>
                                     <div className="w-full h-40">
                                         <img
-                                            src="https://via.placeholder.com/100"
+                                            src={item.image}
                                             alt={item.name}
                                             className="w-full h-full object-cover"
                                         />

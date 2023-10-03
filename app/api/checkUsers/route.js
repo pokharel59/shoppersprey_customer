@@ -24,9 +24,9 @@ export async function POST(request) {
     if (passwordMatch) {
 
       const token = jwt.sign(
-        { name: payload.name, email: payload.email},
+        { user_id: existingUser._id, name: existingUser.name, email: existingUser.email},
         process.env.TOKEN_KEY,
-        { expiresIn: "1h"}
+        { expiresIn: '1000h'}
         );
 
       return NextResponse.json({ token, success: true}, { status: 200 });

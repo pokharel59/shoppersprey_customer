@@ -14,6 +14,7 @@ const ProductPage = (props) => {
     const [name, setName] = useState("");
     const [price, setPrice] = useState("");
     const [description, setDescription] = useState("");
+    const [image, setImage] = useState("");
     const [category, setCategory] = useState("");
     const [title, setTitle] = useState("");
     const [paid] = useState("No");
@@ -39,6 +40,7 @@ const ProductPage = (props) => {
                 setPrice(result.price);
                 setDescription(result.description);
                 setCategory(result.category);
+                setImage(result.image);
             } else {
                 // Handle error here
             }
@@ -118,7 +120,7 @@ const ProductPage = (props) => {
             <div className="flex ml-4">
                 <div className="ml-4 p-4 bg-white items-center">
                     <img
-                        src="https://via.placeholder.com/300"
+                        src={image}
                         alt={name}
                         className="rounded-lg h-auto"
                     />
